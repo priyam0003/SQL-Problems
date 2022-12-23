@@ -1,0 +1,26 @@
+PROBLEM:
+
+The table below contains information about tweets over a given period of time. Calculate the 3-day rolling average of tweets published by each user for each date that a tweet was posted. Output the user id, tweet date, and rolling averages rounded to 2 decimal places.
+
+tweets 
+Example Input:
+tweet_iduser_id	tweet_date
+214252	111	06/01/2022 12:00:00
+739252	111	06/01/2022 12:00:00
+846402	111	06/02/2022 12:00:00
+241425	254	06/02/2022 12:00:00
+137374	111	06/04/2022 12:00:00
+
+
+
+SOLUTION:
+
+select nt.user_id, nt.tweet_date,
+round(avg(nt.ct) over(partition by nt.user_id order by nt.user_id, nt.tweet_date  rows between 2 preceding and current row),2)
+from
+(select user_id, tweet_date,
+COUNT(tweet_date) as ct
+from tweets
+group by tweet_date,user_id) as nt
+
+
